@@ -1,5 +1,5 @@
 # NAC-RPi4-TFT
-Bash Script to Change TFT Backgrounds on a RPi
+Bash Script to Change Backgrounds on a RPi TFT Display
 
 
 ## Installation
