@@ -1,27 +1,44 @@
 #!/bin/bash
 
-IMAGES_DIR="./images/"
+IMAGES_DIR="/home/ptf/tft-display/images/"
 FRAMEBUFFER_DEVICE="/dev/fb1"
 
-if [ "$1" == "on" ]; then
+turn_display_on() {
+    local image="$1"
+
     echo "[*] Turning display on..."
     sudo systemctl stop lightdm
 
-    # Select a random image from the directory
-    IMAGE=$(find "$IMAGES_DIR" -type f \( -iname '*.jpg' -o -iname '*.png' \) | shuf -n 1)
-
-    if [ -z "$IMAGE" ]; then
-        echo "[!] No image found in $IMAGES_DIR"
+    # If no image provided, pick a random one
+    if [ -z "$image" ]; then
+        image=$(find "$IMAGES_DIR" -type f \( -iname '*.jpg' -o -iname '*.png' \) | shuf -n 1)
+        if [ -z "$image" ]; then
+            echo "[!] No image found in $IMAGES_DIR"
+            exit 1
+        fi
+    elif [ ! -f "$image" ]; then
+        echo "[!] Specified image not found: $image"
         exit 1
     fi
 
-    echo "[*] Displaying image: $IMAGE"
-    sudo fbi -T 1 -d "$FRAMEBUFFER_DEVICE" -noverbose -a "$IMAGE"
+    echo "[*] Displaying image: $image"
+    sudo fbi -T 1 -d "$FRAMEBUFFER_DEVICE" -noverbose -a "$image"
+}
 
-elif [ "$1" == "off" ]; then
+turn_display_off() {
     echo "[*] Turning display off..."
     sudo systemctl start lightdm
-else
-    echo "Usage: $0 {on|off}"
-    exit 1
-fi
+}
+
+case "$1" in
+    on)
+        turn_display_on "$2"
+        ;;
+    off)
+        turn_display_off
+        ;;
+    *)
+        echo "Usage: $0 {on [image]|off}"
+        exit 1
+        ;;
+esac
