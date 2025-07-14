@@ -2,7 +2,7 @@
 Bash Script to Change TFT Backgrounds on a RPi
 
 
-## Usage
+## Installation
 
 ````bash
 # download repo
@@ -13,9 +13,18 @@ sudo apt install fbi -y
 # boot into console mode; you can revert via `sudo systemctl set-default graphical.target`
 sudo systemctl set-default multi-user.target
 
-# disable login screen; show background image
-./change_tft_display.sh on
+# put your images in the image folder
+````
 
-# enable login screen
-./change_tft_display.sh off
+## Usage
+
+````bash
+# show custom image
+sudo ./change_tft_display.sh on images/custom.png
+
+# show random image from folder
+sudo ./change_tft_display.sh on
+
+# show native login screen session
+sudo ./change_tft_display.sh off
 ````
